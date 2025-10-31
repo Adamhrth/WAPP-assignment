@@ -1,0 +1,259 @@
+﻿/* KinderLearn Login Page - Refined */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Full background gradient + scrolling fix */
+body {
+    font-family: "Comic Sans MS", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #ff6b9d 0%, #ffd93d 50%, #6bcf7f 100%);
+    min-height: 100%;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Wrapper to center content */
+.page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 15px;
+}
+
+/* Floating background decorations */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    animation: float 8s ease-in-out infinite;
+    z-index: 0;
+}
+
+body::before {
+    width: 300px;
+    height: 300px;
+    top: -120px;
+    left: -120px;
+}
+
+body::after {
+    width: 200px;
+    height: 200px;
+    bottom: -60px;
+    right: -60px;
+    animation-direction: reverse;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-20px) rotate(10deg);
+    }
+}
+
+/* Form styling */
+#form1 {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.container {
+    background: white;
+    padding: 32px;
+    border-radius: 22px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    max-width: 420px;
+    border: 4px solid rgba(255, 255, 255, 0.7);
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Logo section */
+.logo-section {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.logo-image {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 8px;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.logo-text {
+    color: #0b5a8a;
+    font-size: 30px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.container h2 {
+    background: linear-gradient(135deg, #ff6b9d, #9b59b6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* Labels */
+#Label1, #Label2 {
+    display: block;
+    color: #333;
+    font-size: 15px;
+    font-weight: 600;
+    margin: 8px 0 6px;
+}
+
+/* Inputs */
+#txtUsername, #txtPassword {
+    width: 100%;
+    padding: 12px 16px;
+    border: 3px solid #ffd93d;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    margin-bottom: 6px;
+}
+
+    #txtUsername:focus, #txtPassword:focus {
+        border-color: #ff6b9d;
+        box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.2);
+        transform: translateY(-2px);
+        outline: none;
+    }
+
+    #txtUsername::placeholder, #txtPassword::placeholder {
+        color: #aaa;
+    }
+
+/* Validators */
+#rfvUsername, #rfvPassword {
+    display: block;
+    font-size: 13px;
+    margin-top: 2px;
+    font-weight: 600;
+}
+
+/* Error Message Label */
+#lblMessage {
+    display: block;
+    font-size: 14px;
+    margin: 10px 0;
+    text-align: center;
+    font-weight: 600;
+    padding: 8px;
+    border-radius: 8px;
+    background: rgba(255, 0, 0, 0.1);
+}
+
+/* Button */
+#loginBtn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #ff6b9d, #ff9f43);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 14px;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.4);
+}
+
+    #loginBtn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(255, 107, 157, 0.5);
+        background: linear-gradient(135deg, #ff9f43, #ff6b9d);
+    }
+
+    #loginBtn:active {
+        transform: translateY(-1px);
+    }
+
+/* Register link */
+.register-link {
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+    .register-link a {
+        color: #9b59b6;
+        text-decoration: none;
+        font-weight: 700;
+        transition: color 0.3s ease;
+    }
+
+        .register-link a:hover {
+            color: #ff6b9d;
+            text-decoration: underline;
+        }
+
+/* Responsive */
+@media (max-width: 480px) {
+    .container {
+        padding: 26px 20px;
+        border-radius: 18px;
+    }
+
+    .logo-image {
+        width: 65px;
+        height: 65px;
+    }
+
+    .logo-text {
+        font-size: 26px;
+    }
+
+    .container h2 {
+        font-size: 22px;
+    }
+
+    #loginBtn {
+        font-size: 16px;
+        padding: 12px;
+    }
+}

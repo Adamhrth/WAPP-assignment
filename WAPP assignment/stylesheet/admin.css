@@ -1,0 +1,221 @@
+﻿/* --- Core Styles (for consistency) --- */
+:root {
+    --color-primary: #8e44ad; /* Admin Purple */
+    --color-secondary: #3498db; /* Blue */
+    --color-success: #2ecc71; /* Green */
+    --color-danger: #e74c3c; /* Red */
+    --color-warning: #f39c12; /* Yellow/Orange */
+    --color-background: #ffffff;
+    --color-muted: #f4f6f9;
+    --color-border: #e8eaf1;
+    --color-foreground: #343a40;
+    --color-muted-foreground: #6c757d;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 4px 12px rgba(0,0,0,0.05);
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 20px;
+    --spacing-xl: 30px;
+}
+
+/* --- HUB CARD STYLES --- */
+.hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+}
+.hub-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background: var(--color-background);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--color-border);
+    text-decoration: none;
+    color: var(--color-foreground);
+    transition: all 0.3s ease;
+}
+.hub-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border-color: var(--color-primary);
+}
+.hub-card-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    font-family: 'Fredoka', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+.hub-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.hub-card-icon.pending {
+    background-color: rgba(243, 156, 18, 0.1);
+    color: var(--color-warning);
+}
+.hub-card-icon.users {
+    background-color: rgba(52, 152, 219, 0.1);
+    color: var(--color-secondary);
+}
+.hub-card-icon.new-users {
+    background-color: rgba(46, 204, 113, 0.1);
+    color: var(--color-success);
+}
+.hub-card-body {
+    font-size: 2.5rem;
+    font-weight: 700;
+    font-family: 'Fredoka', sans-serif;
+    margin: var(--spacing-md) 0;
+    color: var(--color-primary);
+}
+.hub-card-footer {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-muted-foreground);
+}
+.hub-card-footer span {
+    color: var(--color-primary);
+    transition: color 0.3s ease;
+}
+.hub-card:hover .hub-card-footer span {
+    color: var(--color-secondary);
+}
+
+
+/* --- USER & QUIZ MANAGEMENT STYLES --- */
+
+/* Users Table */
+.users-table {
+    background-color: var(--color-background);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    border: 2px solid var(--color-primary);
+}
+.users-table table { width: 100%; border-collapse: collapse; }
+.users-table thead {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+}
+.users-table th {
+    padding: var(--spacing-md);
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: white;
+}
+.users-table td { padding: var(--spacing-md); border-top: 1px solid var(--color-border); }
+.user-info { display: flex; align-items: center; gap: var(--spacing-md); }
+.user-avatar-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+}
+.user-name { font-weight: 600; margin-bottom: 0.125rem; }
+.user-email { font-size: 0.75rem; color: var(--color-muted-foreground); }
+
+/* --- UPDATED: Role Badges (Solid Colors) --- */
+.role-badge { 
+    padding: 0.25rem 0.75rem; 
+    border-radius: 9999px; 
+    font-size: 0.75rem; 
+    font-weight: 700; 
+    display: inline-block; 
+    color: white; 
+}
+.role-badge-student { background-color: var(--color-secondary); } /* Blue */
+.role-badge-teacher { background-color: var(--color-success); } /* Green */
+.role-badge-admin { background-color: var(--color-danger); } /* Red */
+
+/* --- UPDATED: Status Badges (Cleaner) --- */
+.status-badge { 
+    padding: 0.25rem 0.75rem; 
+    border-radius: 9999px; 
+    font-size: 0.75rem; 
+    font-weight: 600; 
+    display: inline-block; 
+}
+.status-active { background-color: var(--color-success); color: white; }
+.status-inactive { 
+    background-color: var(--color-muted); 
+    color: var(--color-muted-foreground); 
+    border: 1px solid var(--color-border);
+}
+
+/* --- NEW: Warning Button Style --- */
+.btn-warning-sm {
+    background-color: var(--color-warning); /* Warning Orange */
+    color: white;
+    padding: 5px 10px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn-warning-sm:hover {
+    background-color: #d88c0a;
+}
+/* Ensure danger button is also styled */
+.btn-danger-sm {
+    background-color: var(--color-danger);
+    color: white;
+    padding: 5px 10px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    font-size: 0.875rem;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn-danger-sm:hover {
+     background-color: #c0392b;
+}
+
+
+/* Content (Quiz) Card */
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: var(--spacing-lg);
+}
+.content-card {
+    background-color: var(--color-background);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--color-warning);
+    transition: all 0.3s;
+}
+.content-card:hover {
+    box-shadow: 0 8px 24px rgba(243, 156, 18, 0.3);
+    transform: translateY(-2px);
+}
+.content-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: var(--spacing-sm); }
+.content-title { font-size: 1.125rem; font-weight: 700; }
+.content-badge { padding: 0.25rem 0.75rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; color: white; }
+.content-badge-pending { background: linear-gradient(135deg, #f39c12, #e67e22); }
+.content-badge-approved { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+.content-badge-rejected { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.content-meta, .content-type { font-size: 0.875rem; color: var(--color-muted-foreground); margin-bottom: 0.5rem; }
+.content-actions { display: flex; gap: var(--spacing-sm); flex-wrap: wrap; }

@@ -1,0 +1,527 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Nunito", sans-serif;
+    background: linear-gradient(135deg, #e3f2fd 0%, #fce4ec 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header Section */
+.header {
+    background: white;
+    border-radius: 30px;
+    padding: 30px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.logo {
+    font-family: "Fredoka", sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    /* Changed color to match logo blue */
+    color: #0b5a8a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    width: 50px;
+    height: 50px;
+    /* Removed gradient background for logo image */
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+    /* Added styles for logo image */
+    .logo-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+/* Added header-actions wrapper for buttons */
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.back-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Nunito", sans-serif;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .back-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+/* Added logout button styles following the theme */
+.logout-button {
+    background: linear-gradient(135deg, #ff6b9d 0%, #ffa06b 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Nunito", sans-serif;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .logout-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4);
+    }
+
+/* Profile Hero Section */
+.profile-hero {
+    background: white;
+    border-radius: 30px;
+    padding: 50px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.profile-avatar-large {
+    width: 180px;
+    height: 180px;
+    background: linear-gradient(135deg, #ff6b9d 0%, #ffa06b 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 100px;
+    box-shadow: 0 10px 40px rgba(255, 107, 157, 0.3);
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.avatar-display {
+    display: block;
+}
+
+.profile-info {
+    flex: 1;
+    min-width: 300px;
+    text-align: center;
+}
+
+.profile-greeting {
+    font-family: "Fredoka", sans-serif;
+    font-size: 32px;
+    color: #424242;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.name-edit-section {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.name-input {
+    font-family: "Fredoka", sans-serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: #5c6bc0;
+    border: 3px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 15px 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+    max-width: 400px;
+}
+
+    .name-input:focus {
+        outline: none;
+        border-color: #ff6b9d;
+        box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.1);
+    }
+
+.save-name-button {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Nunito", sans-serif;
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+}
+
+    .save-name-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(79, 172, 254, 0.4);
+    }
+
+.profile-subtitle {
+    font-size: 24px;
+    color: #757575;
+    font-weight: 600;
+}
+
+/* Character Selection Section */
+.character-section {
+    background: white;
+    border-radius: 30px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.section-title {
+    font-family: "Fredoka", sans-serif;
+    font-size: 32px;
+    color: #424242;
+    margin-bottom: 30px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.section-icon {
+    font-size: 40px;
+}
+
+.characters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.character-option {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 4px solid transparent;
+}
+
+    .character-option:hover {
+        transform: translateY(-8px) scale(1.05);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .character-option.selected {
+        background: linear-gradient(135deg, #ffa06b 0%, #ff6b9d 100%);
+        border-color: #ff6b9d;
+        transform: scale(1.1);
+        box-shadow: 0 10px 40px rgba(255, 107, 157, 0.4);
+    }
+
+.character-emoji {
+    font-size: 60px;
+    margin-bottom: 10px;
+}
+
+.character-name {
+    font-family: "Fredoka", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #424242;
+}
+
+.character-option.selected .character-name {
+    color: white;
+}
+
+.save-character-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.save-character-button {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+    border: none;
+    padding: 18px 50px;
+    border-radius: 50px;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Nunito", sans-serif;
+    box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4);
+}
+
+    .save-character-button:hover {
+        transform: scale(1.08);
+        box-shadow: 0 8px 25px rgba(240, 147, 251, 0.5);
+    }
+
+/* Achievements Section */
+.achievements-section {
+    background: white;
+    border-radius: 30px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+.achievement-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 25px;
+    padding: 30px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+    .achievement-card::before {
+        content: "✨";
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 24px;
+        opacity: 0.5;
+    }
+
+    .achievement-card.earned {
+        background: linear-gradient(135deg, #ffa06b 0%, #ff6b9d 100%);
+    }
+
+    .achievement-card.locked {
+        background: linear-gradient(135deg, #bdc3c7 0%, #95a5a6 100%);
+        opacity: 0.7;
+    }
+
+    .achievement-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    }
+
+.achievement-badge {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-title {
+    font-family: "Fredoka", sans-serif;
+    font-size: 22px;
+    color: white;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.achievement-desc {
+    color: white;
+    font-size: 15px;
+    margin-bottom: 10px;
+    opacity: 0.95;
+}
+
+.achievement-date,
+.achievement-progress {
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+/* Badges Section */
+.badges-section {
+    background: white;
+    border-radius: 30px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+}
+
+.badge-item {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+    .badge-item.locked {
+        background: linear-gradient(135deg, #e0e0e0 0%, #bdbdbd 100%);
+        opacity: 0.6;
+    }
+
+    .badge-item:hover {
+        transform: scale(1.08) rotate(5deg);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+.badge-icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+.badge-name {
+    font-family: "Fredoka", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+}
+
+.badge-item.locked .badge-name {
+    color: #757575;
+}
+
+/* Encouragement Banner */
+.encouragement-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 25px;
+    padding: 40px;
+    text-align: center;
+    color: white;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.encouragement-text {
+    font-family: "Fredoka", sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.encouragement-subtext {
+    font-size: 18px;
+    opacity: 0.95;
+    line-height: 1.6;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header {
+        padding: 20px;
+        flex-direction: column;
+    }
+
+    .logo {
+        font-size: 28px;
+    }
+
+    .profile-hero {
+        padding: 30px;
+        flex-direction: column;
+    }
+
+    .profile-avatar-large {
+        width: 140px;
+        height: 140px;
+        font-size: 80px;
+    }
+
+    .name-input {
+        font-size: 32px;
+        max-width: 100%;
+    }
+
+    .section-title {
+        font-size: 26px;
+    }
+
+    .characters-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 15px;
+    }
+
+    .character-emoji {
+        font-size: 45px;
+    }
+
+    .achievements-grid,
+    .badges-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Added responsive styles for header-actions */
+    .header-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+    }
+
+    .back-button,
+    .logout-button {
+        width: 100%;
+        text-align: center;
+    }
+}

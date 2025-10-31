@@ -1,0 +1,460 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Nunito", sans-serif;
+    background: linear-gradient(135deg, #e3f2fd 0%, #fce4ec 100%);
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Header Section */
+.header {
+    background: white;
+    border-radius: 30px;
+    padding: 30px 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.logo {
+    font-family: "Fredoka", sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    /* Changed color to match logo blue */
+    color: #0b5a8a;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    width: 50px;
+    height: 50px;
+    /* Removed gradient background for logo image */
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+    /* Added styles for logo image */
+    .logo-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+.welcome-message {
+    font-family: "Fredoka", sans-serif;
+    font-size: 28px;
+    color: #5c6bc0;
+    font-weight: 600;
+}
+
+.profile-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 15px 25px;
+    border-radius: 50px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    /* Removed position: relative since dropdown is removed */
+    text-decoration: none;
+}
+
+    .profile-section:hover {
+        transform: scale(1.05);
+    }
+
+.profile-avatar {
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+.profile-name {
+    font-weight: 700;
+    font-size: 18px;
+}
+
+/* Progress Bar */
+.progress-container {
+    background: white;
+    border-radius: 25px;
+    padding: 25px 35px;
+    margin-bottom: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.progress-title {
+    font-family: "Fredoka", sans-serif;
+    font-size: 22px;
+    color: #424242;
+    font-weight: 600;
+}
+
+.stars {
+    display: flex;
+    gap: 8px;
+    font-size: 28px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 30px;
+    background: #f0f0f0;
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffa06b 0%, #ff6b9d 100%);
+    border-radius: 20px;
+    width: 65%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 15px;
+    font-weight: 700;
+    color: white;
+    font-size: 14px;
+}
+
+/* Main Content */
+.main-content {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+
+/* Section Header Wrapper */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* Section Title */
+.section-title {
+    font-family: "Fredoka", sans-serif;
+    font-size: 32px;
+    color: #424242;
+    margin-bottom: 0;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.section-icon {
+    font-size: 40px;
+}
+
+/* Subject Cards Grid */
+.subjects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    /* Removed margin-bottom since button is now separate */
+}
+
+.subject-card {
+    background: white;
+    border-radius: 25px;
+    padding: 35px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+    .subject-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 8px;
+        background: linear-gradient(90deg, var(--card-color-1), var(--card-color-2));
+    }
+
+    .subject-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .subject-card.english {
+        --card-color-1: #ff6b9d;
+        --card-color-2: #ffa06b;
+    }
+
+    .subject-card.math {
+        --card-color-1: #667eea;
+        --card-color-2: #764ba2;
+    }
+
+    .subject-card.science {
+        --card-color-1: #4facfe;
+        --card-color-2: #00f2fe;
+    }
+
+    .subject-card.art {
+        --card-color-1: #f093fb;
+        --card-color-2: #f5576c;
+    }
+
+.subject-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 50px;
+    background: linear-gradient(135deg, var(--card-color-1), var(--card-color-2));
+}
+
+.subject-name {
+    font-family: "Fredoka", sans-serif;
+    font-size: 26px;
+    color: #424242;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.subject-description {
+    color: #757575;
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.subject-button {
+    background: linear-gradient(135deg, var(--card-color-1), var(--card-color-2));
+    color: white;
+    border: none;
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: "Nunito", sans-serif;
+}
+
+    .subject-button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+
+/* Activities Section */
+.activities-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.activity-card {
+    background: white;
+    border-radius: 25px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+    .activity-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+.activity-icon-wrapper {
+    width: 90px;
+    height: 90px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 45px;
+    flex-shrink: 0;
+}
+
+.activity-card.games .activity-icon-wrapper {
+    background: linear-gradient(135deg, #ffa06b 0%, #ff6b9d 100%);
+}
+
+.activity-card.puzzles .activity-icon-wrapper {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.activity-card.coloring .activity-icon-wrapper {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.activity-info {
+    flex: 1;
+}
+
+.activity-name {
+    font-family: "Fredoka", sans-serif;
+    font-size: 24px;
+    color: #424242;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+.activity-description {
+    color: #757575;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+/* View More Button Styles */
+.view-more-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+/* Enhanced button styling to override ASP.NET default input styles */
+.view-more-button,
+input.view-more-button,
+input[type="submit"].view-more-button {
+    background: linear-gradient(135deg, #ffa06b 0%, #ff6b9d 100%) !important;
+    color: white !important;
+    border: none !important;
+    padding: 12px 30px !important;
+    border-radius: 50px !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    font-family: "Nunito", sans-serif !important;
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3) !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+}
+
+    .view-more-button:hover,
+    input.view-more-button:hover,
+    input[type="submit"].view-more-button:hover {
+        transform: scale(1.05) !important;
+        box-shadow: 0 6px 20px rgba(255, 107, 157, 0.4) !important;
+        background: linear-gradient(135deg, #ff6b9d 0%, #ffa06b 100%) !important;
+    }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header {
+        padding: 20px;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .logo {
+        font-size: 28px;
+    }
+
+    .welcome-message {
+        font-size: 22px;
+    }
+
+    .section-title {
+        font-size: 26px;
+    }
+
+    .subjects-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .activities-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .activity-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .view-more-wrapper {
+        justify-content: center;
+    }
+
+    .view-more-button {
+        width: 100%;
+    }
+}
+
+/* Encouraging Message */
+.encouragement-banner {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 25px;
+    padding: 30px;
+    text-align: center;
+    color: white;
+    margin-top: 40px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+}
+
+.encouragement-text {
+    font-family: "Fredoka", sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.encouragement-subtext {
+    font-size: 18px;
+    opacity: 0.95;
+}
