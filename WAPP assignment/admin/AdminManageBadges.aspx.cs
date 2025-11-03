@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using System.Data; // Required for SqlTransaction
+using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -29,7 +29,6 @@ namespace WAPP_assignment.admin
             }
         }
 
-        // --- NEW METHOD ---
         private void LoadCategories()
         {
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
@@ -44,21 +43,15 @@ namespace WAPP_assignment.admin
                     ddlCategory.DataBind();
                 }
             }
-            // Add a default "All Categories" item
             ddlCategory.Items.Insert(0, new ListItem("All Categories", "0"));
         }
 
-
-        // --- UPDATED METHOD ---
         private void LoadAchievements()
         {
-            // This query now joins Category to get the name of the rule
+            // UPDATED: Removed BadgeImageURL, added BadgeType
             string query = @"
                 SELECT 
-                    A.AchievementID, 
-                    A.Name, 
-                    A.Description, 
-                    A.BadgeImageURL,
+                    A.AchievementID, A.Name, A.Description, A.BadgeType,
                     A.QuizCountThreshold,
                     ISNULL(C.Name, 'All Categories') AS CategoryName,
                     (SELECT COUNT(*) FROM StudentAchievements SA WHERE SA.AchievementID = A.AchievementID) AS EarnedCount
@@ -75,29 +68,22 @@ namespace WAPP_assignment.admin
                     rptAchievements.DataBind();
                 }
             }
-
             pnlNoBadges.Visible = rptAchievements.Items.Count == 0;
         }
 
-        // --- UPDATED METHOD ---
         protected void btnAddBadge_Click(object sender, EventArgs e)
         {
             if (!Page.IsValid) return;
 
             string name = txtName.Text.Trim();
-            string imageUrl = txtBadgeImageURL.Text.Trim();
-
-            // Get new rule data
             int categoryId = Convert.ToInt32(ddlCategory.SelectedValue);
             int quizCount = Convert.ToInt32(txtQuizCount.Text);
-
-            // Auto-generate description
             string description = $"Complete {quizCount} quiz(zes) in {ddlCategory.SelectedItem.Text}.";
 
-            // We only insert global badges (where GrantsAchievementID is NULL)
+            // UPDATED: Removed ImageURL, added BadgeType
             string query = @"
-                INSERT INTO Achievements (Name, Description, BadgeImageURL, QuizCountThreshold, CategoryID) 
-                VALUES (@Name, @Description, @BadgeImageURL, @QuizCountThreshold, @CategoryID)";
+                INSERT INTO Achievements (Name, Description, QuizCountThreshold, CategoryID, BadgeType) 
+                VALUES (@Name, @Description, @QuizCountThreshold, @CategoryID, 'Global')";
 
             try
             {
@@ -107,10 +93,8 @@ namespace WAPP_assignment.admin
                     {
                         cmd.Parameters.AddWithValue("@Name", name);
                         cmd.Parameters.AddWithValue("@Description", description);
-                        cmd.Parameters.AddWithValue("@BadgeImageURL", imageUrl);
                         cmd.Parameters.AddWithValue("@QuizCountThreshold", quizCount);
 
-                        // If "All Categories" (value 0) is chosen, insert NULL into the DB
                         if (categoryId == 0)
                         {
                             cmd.Parameters.AddWithValue("@CategoryID", DBNull.Value);
@@ -124,7 +108,6 @@ namespace WAPP_assignment.admin
                         cmd.ExecuteNonQuery();
                     }
                 }
-
                 lblMessage.Text = "Achievement added successfully!";
                 lblMessage.ForeColor = System.Drawing.Color.Green;
                 ClearForm();
@@ -145,21 +128,49 @@ namespace WAPP_assignment.admin
             LoadAchievements(); // Refresh the list
         }
 
-        // --- This method is unchanged ---
         protected void rptAchievements_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
             if (e.CommandName == "DeleteBadge")
             {
                 int achievementId = Convert.ToInt32(e.CommandArgument);
-                string query = "DELETE FROM Achievements WHERE AchievementID = @AchievementID";
 
+                // Use a transaction to delete from all 3 tables safely
                 using (SqlConnection conn = new SqlConnection(GetConnectionString()))
                 {
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    conn.Open();
+                    SqlTransaction transaction = conn.BeginTransaction();
+                    try
                     {
-                        cmd.Parameters.AddWithValue("@AchievementID", achievementId);
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
+                        // 1. Delete from StudentAchievements
+                        string querySA = "DELETE FROM StudentAchievements WHERE AchievementID = @AchievementID";
+                        using (SqlCommand cmd = new SqlCommand(querySA, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@AchievementID", achievementId);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 2. Unlink from Quizzes
+                        string queryQ = "UPDATE Quizzes SET GrantsAchievementID = NULL WHERE GrantsAchievementID = @AchievementID";
+                        using (SqlCommand cmd = new SqlCommand(queryQ, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@AchievementID", achievementId);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        // 3. Delete from Achievements
+                        string queryA = "DELETE FROM Achievements WHERE AchievementID = @AchievementID";
+                        using (SqlCommand cmd = new SqlCommand(queryA, conn, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("@AchievementID", achievementId);
+                            cmd.ExecuteNonQuery();
+                        }
+
+                        transaction.Commit();
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        // Show an error
                     }
                 }
                 LoadAchievements();
@@ -172,7 +183,16 @@ namespace WAPP_assignment.admin
             txtDescription.Text = "";
             txtQuizCount.Text = "1";
             ddlCategory.SelectedIndex = 0;
-            txtBadgeImageURL.Text = "images/badges/default_badge.png";
+        }
+
+        // --- NEW HELPER ---
+        protected string GetBadgeColor(object badgeType)
+        {
+            if (badgeType.ToString() == "Global")
+            {
+                return "#3498db"; // Blue
+            }
+            return "#f39c12"; // Yellow
         }
     }
 }

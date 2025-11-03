@@ -16,6 +16,7 @@
         .form-label { display: block; font-weight: 600; margin-bottom: var(--spacing-sm); }
         .form-input { width: 100%; padding: var(--spacing-md); border: 2px solid var(--color-border); border-radius: var(--radius-md); font-size: 0.9375rem; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--spacing-lg); }
+        .badge-icon { font-size: 2.5rem; } /* Style for the star */
     </style>
 </head>
 <body>
@@ -83,7 +84,7 @@
                             <asp:DropDownList ID="ddlCategory" runat="server" CssClass="form-input"></asp:DropDownList>
                         </div>
                         <div class="form-group">
-                            <label class="form-label">Quizzes to Complete (at 100%)</label>
+                            <label class="form-label">Quizzes to Complete (at 50% score)</label>
                             <asp:TextBox ID="txtQuizCount" runat="server" CssClass="form-input" TextMode="Number" Text="1"></asp:TextBox>
                             <asp:RangeValidator ID="rvQuizCount" runat="server" ControlToValidate="txtQuizCount" ErrorMessage="Must be 1 or more." ForeColor="Red" Type="Integer" MinimumValue="1" MaximumValue="1000" ValidationGroup="AddBadge" Display="Dynamic" />
                         </div>
@@ -92,11 +93,6 @@
                     <div class="form-group">
                         <label class="form-label" for="txtDescription">Description (Auto-Generated)</label>
                         <asp:TextBox ID="txtDescription" runat="server" CssClass="form-input" placeholder="e.g., Complete 10 quizzes." ReadOnly="true" BackColor="#f4f6f9"></asp:TextBox>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="txtBadgeImageURL">Badge Image URL</label>
-                        <asp:TextBox ID="txtBadgeImageURL" runat="server" CssClass="form-input" Text="images/badges/default_badge.png"></asp:TextBox>
-                        <asp:RequiredFieldValidator ID="rfvBadgeImageURL" runat="server" ControlToValidate="txtBadgeImageURL" ErrorMessage="Image URL is required." ForeColor="Red" Display="Dynamic" ValidationGroup="AddBadge" />
                     </div>
                     
                     <div class="form-group">
@@ -125,7 +121,7 @@
                                 <ItemTemplate>
                                     <tr>
                                         <td>
-                                            <img src='../<%# Eval("BadgeImageURL") %>' alt='<%# Eval("Name") %>' style="width: 50px; height: 50px; border-radius: 5px;" />
+                                            <span class="badge-icon" style='color: <%# GetBadgeColor(Eval("BadgeType")) %>;'>★</span>
                                         </td>
                                         <td><%# Eval("Name") %></td>
                                         <td>

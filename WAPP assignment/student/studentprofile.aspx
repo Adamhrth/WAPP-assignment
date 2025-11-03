@@ -177,10 +177,10 @@
                     </h2>
                     <div class="achievements-grid">
                         <asp:Repeater ID="rptAchievements" runat="server">
-                            <ItemTemplate>
+                             <ItemTemplate>
                                 <div class='achievement-card <%# GetAchievementClass(Eval("EarnedAt")) %>'>
                                     <div class="achievement-badge">
-                                        <%# GetBadgeIcon(Eval("EarnedAt"), Eval("BadgeImageURL")) %>
+                                        <%# GetBadgeIcon(Eval("EarnedAt"), Eval("BadgeType")) %>
                                     </div>
                                     <h3 class="achievement-title"><%# Eval("Name") %></h3>
                                     <p class="achievement-desc"><%# Eval("Description") %></p>

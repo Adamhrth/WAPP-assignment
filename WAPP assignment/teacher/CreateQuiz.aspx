@@ -93,12 +93,7 @@
                             <asp:TextBox ID="txtBadgeName" runat="server" CssClass="form-control" placeholder="e.g., Addition Champion!"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="rfvBadgeName" runat="server" ControlToValidate="txtBadgeName" ErrorMessage="Badge name is required." ForeColor="Red" Display="Dynamic" ValidationGroup="CreateQuiz" />
                         </div>
-                        <div class="form-group">
-                            <asp:Label ID="lblBadgeImageURL" runat="server" Text="Badge Image URL" AssociatedControlID="txtBadgeImageURL" />
-                            <asp:TextBox ID="txtBadgeImageURL" runat="server" CssClass="form-control" Text="images/badges/default_badge.png"></asp:TextBox>
-                            <asp:RequiredFieldValidator ID="rfvBadgeImageURL" runat="server" ControlToValidate="txtBadgeImageURL" ErrorMessage="Badge image URL is required." ForeColor="Red" Display="Dynamic" ValidationGroup="CreateQuiz" />
-                        </div>
-                    </asp:Panel>
+                        </asp:Panel>
                 </div>
                 <div class="form-group" style="margin-top: 20px;">
                     <asp:Button ID="btnCreateQuiz" runat="server" Text="Create Quiz and Add Questions" 

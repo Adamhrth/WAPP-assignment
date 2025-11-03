@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using System.Data; // Required for SqlTransaction
+using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -27,9 +27,10 @@ namespace WAPP_assignment // Your project's namespace
                 LoadCategories();
             }
 
+            // --- THIS IS THE FIX ---
             // Set validator state based on checkbox
             rfvBadgeName.Enabled = chkCreateBadge.Checked;
-            rfvBadgeImageURL.Enabled = chkCreateBadge.Checked;
+            // The line for 'rfvBadgeImageURL' has been removed.
         }
 
         private void LoadCategories()
@@ -50,16 +51,12 @@ namespace WAPP_assignment // Your project's namespace
             ddlCategories.Items.Insert(0, new ListItem("-- Select a Category --", ""));
         }
 
-        // --- NEW METHOD ---
-        // This shows or hides the badge fields when the checkbox is clicked
         protected void chkCreateBadge_CheckedChanged(object sender, EventArgs e)
         {
             pnlBadgeFields.Visible = chkCreateBadge.Checked;
             rfvBadgeName.Enabled = chkCreateBadge.Checked;
-            rfvBadgeImageURL.Enabled = chkCreateBadge.Checked;
         }
 
-        // --- UPDATED METHOD ---
         protected void btnCreateQuiz_Click(object sender, EventArgs e)
         {
             if (!Page.IsValid)
@@ -72,9 +69,8 @@ namespace WAPP_assignment // Your project's namespace
             string description = txtDescription.Text.Trim();
             int categoryId = Convert.ToInt32(ddlCategories.SelectedValue);
 
-            int? newAchievementId = null; // This is a nullable int
+            int? newAchievementId = null;
 
-            // Use a transaction to ensure both or neither are created
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
             {
                 conn.Open();
@@ -86,17 +82,15 @@ namespace WAPP_assignment // Your project's namespace
                     if (chkCreateBadge.Checked)
                     {
                         string badgeName = txtBadgeName.Text.Trim();
-                        string badgeImage = txtBadgeImageURL.Text.Trim();
-                        // Use quiz title as description if badge description isn't collected
-                        string badgeDescription = $"Awarded for 100% on the quiz: '{title}'";
+                        string badgeDescription = $"100% on '{title}'"; // Auto-description
 
-                        string queryAch = "INSERT INTO Achievements (Name, Description, BadgeImageURL) VALUES (@Name, @Description, @BadgeImageURL); SELECT SCOPE_IDENTITY();";
+                        // UPDATED: No image, BadgeType is 'Teacher'
+                        string queryAch = "INSERT INTO Achievements (Name, Description, BadgeType) VALUES (@Name, @Description, 'Teacher'); SELECT SCOPE_IDENTITY();";
 
                         using (SqlCommand cmdAch = new SqlCommand(queryAch, conn, transaction))
                         {
                             cmdAch.Parameters.AddWithValue("@Name", badgeName);
                             cmdAch.Parameters.AddWithValue("@Description", badgeDescription);
-                            cmdAch.Parameters.AddWithValue("@BadgeImageURL", badgeImage);
                             newAchievementId = Convert.ToInt32(cmdAch.ExecuteScalar());
                         }
                     }
@@ -115,7 +109,6 @@ namespace WAPP_assignment // Your project's namespace
                         cmdQuiz.Parameters.AddWithValue("@CategoryID", categoryId);
                         cmdQuiz.Parameters.AddWithValue("@TeacherID", teacherId);
 
-                        // Handle the nullable Achievement ID
                         if (newAchievementId.HasValue)
                         {
                             cmdQuiz.Parameters.AddWithValue("@GrantsAchievementID", newAchievementId.Value);
@@ -128,10 +121,8 @@ namespace WAPP_assignment // Your project's namespace
                         newQuizId = Convert.ToInt32(cmdQuiz.ExecuteScalar());
                     }
 
-                    // 3. If all succeeded, commit
                     transaction.Commit();
 
-                    // 4. Redirect to ManageQuiz page
                     if (newQuizId > 0)
                     {
                         Response.Redirect($"ManageQuiz.aspx?QuizID={newQuizId}");
@@ -143,7 +134,6 @@ namespace WAPP_assignment // Your project's namespace
                 }
                 catch (Exception ex)
                 {
-                    // If anything failed, roll back all changes
                     transaction.Rollback();
                     lblMessage.Text = "An error occurred. Please try again. Details: " + ex.Message;
                 }

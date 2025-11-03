@@ -20,32 +20,12 @@
                 <span class="sidebar-title">KinderLearn</span>
             </div>
             <nav class="sidebar-nav">
-                <a href="teacherdashboard.aspx" class="sidebar-link">
-                    <svg class="sidebar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-                    </svg>
-                    <span>Dashboard</span>
-                </a>
-                <a href="teacherCourse.aspx" class="sidebar-link">
-                    <svg class="sidebar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
-                    </svg>
-                    <span>My Quizzes</span>
-                </a>
-                <a href="teacherStudent.aspx" class="sidebar-link active">
-                    <svg class="sidebar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                    </svg>
-                    <span>Students</span>
-                </a>
+                <a href="teacherdashboard.aspx" class="sidebar-link"><span>Dashboard</span></a>
+                <a href="teacherCourse.aspx" class="sidebar-link"><span>My Quizzes</span></a>
+                <a href="teacherStudent.aspx" class="sidebar-link active"><span>Students</span></a>
             </nav>
             <div class="sidebar-footer">
-                <a href="../loginsignup/login.aspx" class="sidebar-link">
-                    <svg class="sidebar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-                    </svg>
-                    <span>Logout</span>
-                </a>
+                <a href="../loginsignup/login.aspx?action=logout" class="sidebar-link"><span>Logout</span></a>
             </div>
         </aside>
 
@@ -85,8 +65,7 @@
                                 <th>Quiz</th>
                                 <th>Score</th>
                                 <th>Completed On</th>
-                                <th>Actions</th>
-                            </tr>
+                                </tr>
                         </thead>
                         <tbody id="studentsTableBody">
                             <asp:Repeater ID="rptStudents" runat="server">
@@ -106,18 +85,12 @@
                                             </span>
                                         </td>
                                         <td><%# Eval("CompletedAt", "{0:g}") %></td>
-                                        <td>
-                                            <asp:HyperLink runat="server" CssClass="btn btn-outline btn-sm"
-                                                NavigateUrl='<%# "StudentDetails.aspx?StudentID=" + Eval("StudentID") %>'>
-                                                View
-                                            </asp:HyperLink>
-                                        </td>
-                                    </tr>
+                                        </tr>
                                 </ItemTemplate>
                             </asp:Repeater>
                             <asp:PlaceHolder ID="phNoStudents" runat="server" Visible="false">
                                 <tr>
-                                    <td colspan="6" style="text-align:center; padding: 20px;">
+                                    <td colspan="5" style="text-align:center; padding: 20px;">
                                         No students have completed your quizzes matching this filter.
                                     </td>
                                 </tr>

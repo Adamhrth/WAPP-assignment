@@ -13,27 +13,32 @@ namespace WAPP_assignment // Ensure this matches your project's namespace
             return ConfigurationManager.ConnectionStrings["EducationDB"].ConnectionString;
         }
 
+        // --- NEW --- Stores the current filter in ViewState
+        private string CurrentFilter
+        {
+            get { return ViewState["QuizFilter"] as string ?? "all_active"; }
+            set { ViewState["QuizFilter"] = value; }
+        }
+
         protected void Page_Load(object sender, EventArgs e)
         {
-            // --- SECURITY CHECK ---
             if (Session["IsAuthenticated"] == null || !(bool)Session["IsAuthenticated"] || Session["UserRole"].ToString() != "teacher")
             {
                 Response.Redirect("../loginsignup/login.aspx");
                 return;
             }
-            // --- END SECURITY CHECK ---
 
             if (!IsPostBack)
             {
-                // Set Avatar
                 string teacherName = Session["FullName"] != null ? Session["FullName"].ToString() : "T";
                 if (!string.IsNullOrEmpty(teacherName))
                 {
                     litAvatar.Text = teacherName.Substring(0, 1).ToUpper();
                 }
 
-                // Load all quizzes by default
-                LoadQuizzes("all");
+                // --- UPDATED --- Load "All" (which is now all non-archived) by default
+                LoadQuizzes(CurrentFilter);
+                SetActiveFilterTab(btnAllQuizzes);
             }
         }
 
@@ -41,20 +46,23 @@ namespace WAPP_assignment // Ensure this matches your project's namespace
         {
             int teacherId = Convert.ToInt32(Session["UserID"]);
 
-            // This query is from your dashboard, it gets all the counts
             string query = @"
                 SELECT 
-                    Q.QuizID, 
-                    Q.Title, 
-                    Q.Status,
+                    Q.QuizID, Q.Title, Q.Status,
                     (SELECT COUNT(DISTINCT QA.StudentID) FROM QuizAttempts QA WHERE QA.QuizID = Q.QuizID AND QA.CompletedAt IS NOT NULL) AS StudentCount,
                     (SELECT COUNT(*) FROM Questions QN WHERE QN.QuizID = Q.QuizID) AS QuestionCount
                 FROM Quizzes Q
                 WHERE Q.TeacherID = @TeacherID";
 
-            // Add the filter logic
-            if (filter != "all")
+            // --- UPDATED FILTER LOGIC ---
+            if (filter == "all_active")
             {
+                // "All" now means all *except* archived
+                query += " AND Q.Status != 'Archived'";
+            }
+            else
+            {
+                // Filter for a specific status
                 query += " AND Q.Status = @Status";
             }
             query += " ORDER BY Q.CreatedAt DESC";
@@ -64,7 +72,7 @@ namespace WAPP_assignment // Ensure this matches your project's namespace
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
                     cmd.Parameters.AddWithValue("@TeacherID", teacherId);
-                    if (filter != "all")
+                    if (filter != "all_active")
                     {
                         cmd.Parameters.AddWithValue("@Status", filter);
                     }
@@ -75,77 +83,92 @@ namespace WAPP_assignment // Ensure this matches your project's namespace
                 }
             }
 
-            // Show a message if no quizzes were found
             pnlNoQuizzes.Visible = rptQuizzes.Items.Count == 0;
+            CurrentFilter = filter; // Save the current filter
         }
 
-        // --- FILTER BUTTON CLICK HANDLERS ---
+        // --- FILTER BUTTON CLICK HANDLERS (Updated) ---
 
         protected void btnAllQuizzes_Click(object sender, EventArgs e)
         {
-            LoadQuizzes("all");
+            LoadQuizzes("all_active"); // "All" now means all non-archived
             SetActiveFilterTab(btnAllQuizzes);
         }
 
         protected void btnActiveQuizzes_Click(object sender, EventArgs e)
         {
-            LoadQuizzes("Approved"); // "Active" in the UI is "Approved" in the DB
+            LoadQuizzes("Approved");
             SetActiveFilterTab(btnActiveQuizzes);
         }
 
         protected void btnDraftQuizzes_Click(object sender, EventArgs e)
         {
-            LoadQuizzes("Pending"); // "Draft" in the UI is "Pending" in the DB
+            LoadQuizzes("Pending");
             SetActiveFilterTab(btnDraftQuizzes);
         }
 
-        protected void btnRejectedQuizzes_Click(object sender, EventArgs e)
+        // --- NEW BUTTON HANDLER ---
+        protected void btnArchivedQuizzes_Click(object sender, EventArgs e)
         {
-            LoadQuizzes("Rejected"); // "Archived" in your UI, but "Rejected" is in our DB
-            SetActiveFilterTab(btnRejectedQuizzes);
+            LoadQuizzes("Archived");
+            SetActiveFilterTab(btnArchivedQuizzes);
         }
 
-        // Helper to set the 'active' class on the clicked tab
+
+        // --- UPDATED HELPER METHOD ---
         private void SetActiveFilterTab(LinkButton activeBtn)
         {
             btnAllQuizzes.CssClass = "filter-tab";
             btnActiveQuizzes.CssClass = "filter-tab";
             btnDraftQuizzes.CssClass = "filter-tab";
-            btnRejectedQuizzes.CssClass = "filter-tab";
+            btnArchivedQuizzes.CssClass = "filter-tab"; // Added
             activeBtn.CssClass = "filter-tab active";
         }
 
-        // --- REPEATER COMMAND HANDLER ---
+        // --- REPEATER COMMAND HANDLER (Updated) ---
 
         protected void rptQuizzes_ItemCommand(object source, RepeaterCommandEventArgs e)
         {
-            if (e.CommandName == "DeleteQuiz")
-            {
-                int quizId = Convert.ToInt32(e.CommandArgument);
-                int teacherId = Convert.ToInt32(Session["UserID"]);
+            int quizId = Convert.ToInt32(e.CommandArgument);
+            int teacherId = Convert.ToInt32(Session["UserID"]);
 
-                // We must delete from Questions first if cascade isn't set,
-                // but our DB design has ON DELETE CASCADE, so we just delete the quiz.
-                string query = "DELETE FROM Quizzes WHERE QuizID = @QuizID AND TeacherID = @TeacherID";
+            if (e.CommandName == "ArchiveQuiz")
+            {
+ 
+                string query = "UPDATE Quizzes SET Status = 'Archived' WHERE QuizID = @QuizID AND TeacherID = @TeacherID";
 
                 using (SqlConnection conn = new SqlConnection(GetConnectionString()))
                 {
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         cmd.Parameters.AddWithValue("@QuizID", quizId);
-                        cmd.Parameters.AddWithValue("@TeacherID", teacherId); // Security check
+                        cmd.Parameters.AddWithValue("@TeacherID", teacherId);
                         conn.Open();
                         cmd.ExecuteNonQuery();
                     }
                 }
-
-                // Refresh the list
-                LoadQuizzes("all");
-                SetActiveFilterTab(btnAllQuizzes);
             }
+            else if (e.CommandName == "RestoreQuiz")
+            {
+ 
+                string query = "UPDATE Quizzes SET Status = 'Pending' WHERE QuizID = @QuizID AND TeacherID = @TeacherID";
+
+                using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@QuizID", quizId);
+                        cmd.Parameters.AddWithValue("@TeacherID", teacherId);
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+
+            LoadQuizzes(CurrentFilter);
         }
 
-        // Helper function for ASPX page to set CSS class for quiz status
+        // --- UPDATED HELPER METHOD ---
         protected string GetStatusClass(object statusObj)
         {
             string status = statusObj.ToString().ToLower();
@@ -156,7 +179,9 @@ namespace WAPP_assignment // Ensure this matches your project's namespace
                 case "pending":
                     return "draft";
                 case "rejected":
-                    return "rejected"; // You'll need to add a .course-badge-rejected class to your CSS
+                    return "rejected";
+                case "archived":
+                    return "archived"; // New style
                 default:
                     return "draft";
             }

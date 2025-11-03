@@ -141,33 +141,6 @@ namespace WAPP_assignment
         protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBadgeName;
 
         /// <summary>
-        /// lblBadgeImageURL control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblBadgeImageURL;
-
-        /// <summary>
-        /// txtBadgeImageURL control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtBadgeImageURL;
-
-        /// <summary>
-        /// rfvBadgeImageURL control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator rfvBadgeImageURL;
-
-        /// <summary>
         /// btnCreateQuiz control.
         /// </summary>
         /// <remarks>

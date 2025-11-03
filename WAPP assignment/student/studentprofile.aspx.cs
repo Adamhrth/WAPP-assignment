@@ -50,13 +50,9 @@ namespace WAPP_assignment.student
                             string lastName = reader["LastName"].ToString();
                             string username = reader["Username"].ToString();
 
-                            // --- UPDATED ---
-                            // Populate textboxes for editing
                             txtFirstName.Text = firstName;
                             txtLastName.Text = lastName;
                             txtUsername.Text = username;
-
-                            // Populate display elements
                             litProfileName.Text = $"{firstName} {lastName}";
 
                             string avatar = "😊";
@@ -76,7 +72,6 @@ namespace WAPP_assignment.student
             }
         }
 
-        // --- RENAMED from btnSaveName_Click to btnSaveProfile_Click ---
         protected void btnSaveProfile_Click(object sender, EventArgs e)
         {
             if (!Page.IsValid) return;
@@ -86,7 +81,6 @@ namespace WAPP_assignment.student
             string newLastName = txtLastName.Text.Trim();
             string newUsername = txtUsername.Text.Trim();
 
-            // --- VALIDATION: Check if username is taken by ANOTHER user ---
             string checkUserQuery = "SELECT COUNT(*) FROM Users WHERE Username = @Username AND UserID != @StudentID";
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
             {
@@ -106,7 +100,6 @@ namespace WAPP_assignment.student
                     }
                 }
 
-                // --- UPDATE: Save all three fields ---
                 string updateQuery = "UPDATE Users SET FirstName = @FirstName, LastName = @LastName, Username = @Username WHERE UserID = @StudentID";
                 using (SqlCommand updateCmd = new SqlCommand(updateQuery, conn))
                 {
@@ -118,13 +111,11 @@ namespace WAPP_assignment.student
                 }
             }
 
-            // --- UPDATE: Refresh Session variables ---
             Session["FirstName"] = newFirstName;
             Session["LastName"] = newLastName;
             Session["Username"] = newUsername;
             Session["FullName"] = $"{newFirstName} {newLastName}";
 
-            // Refresh the name on the page
             litProfileName.Text = $"{newFirstName} {newLastName}";
 
             lblProfileMessage.Text = "Profile updated successfully!";
@@ -155,16 +146,19 @@ namespace WAPP_assignment.student
             lblProfileMessage.Visible = true;
         }
 
+        // --- THIS METHOD IS NOW FIXED ---
         private void LoadMyAchievements()
         {
             int studentId = Convert.ToInt32(Session["UserID"]);
 
+            // This query now correctly gets ALL achievements and
+            // joins the ones the student has earned (SA.EarnedAt)
             string query = @"
                 SELECT 
                     A.Name,
                     A.Description,
-                    A.BadgeImageURL,
-                    SA.EarnedAt  
+                    A.BadgeType,
+                    SA.EarnedAt
                 FROM Achievements A
                 LEFT JOIN StudentAchievements SA ON A.AchievementID = SA.AchievementID 
                                                 AND SA.StudentID = @StudentID
@@ -180,6 +174,12 @@ namespace WAPP_assignment.student
                     rptAchievements.DataBind();
                 }
             }
+
+
+            if (rptAchievements.Items.Count == 0)
+            {
+                // pnlNoBadges.Visible = true; 
+            }
         }
 
         // --- HELPER FUNCTIONS ---
@@ -193,14 +193,18 @@ namespace WAPP_assignment.student
             return "earned";
         }
 
-        protected string GetBadgeIcon(object earnedAt, object imageUrl)
+        protected string GetBadgeIcon(object earnedAt, object badgeType)
         {
             if (earnedAt == DBNull.Value || earnedAt == null)
             {
-                return "❓";
+                return "❓"; // Locked
             }
-            // Prepends ../ to the image URL
-            return $"<img src='../{imageUrl}' alt='Badge' style='width: 50px; height: 50px;' />";
+
+            if (badgeType != null && badgeType.ToString() == "Global")
+            {
+                return "<span class='badge-icon' style='color: #3498db; font-size: 2.5rem;'>★</span>"; // Blue Star
+            }
+            return "<span class='badge-icon' style='color: #f39c12; font-size: 2.5rem;'>★</span>"; // Yellow Star
         }
 
         protected string GetEarnedDate(object earnedAt)

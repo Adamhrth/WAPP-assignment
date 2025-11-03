@@ -46,7 +46,7 @@
                 </a>
                 <a href="AdminManageQuestions.aspx" class="sidebar-link">
                      <svg class="sidebar-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8"V
+                       <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.9-2.73L22 10M2 12.5a10 10 0 0 0 18.9 2.73L22 14"/>
                     </svg>
                     <span>Manage Questions</span>
                 </a>

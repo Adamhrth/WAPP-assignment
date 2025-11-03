@@ -117,13 +117,6 @@
                         </div>
                     </div>
                 </section>
-
-                <section class="profile-section">
-                    <h3 class="profile-section-title">Security</h3>
-                    <div class="profile-security">
-                        <asp:HyperLink ID="hlChangePassword" runat="server" CssClass="btn btn-outline" NavigateUrl="teacherChangePassword.aspx">Change Password</asp:HyperLink>
-                    </div>
-                </section>
             </div>
         </main>
     </div>

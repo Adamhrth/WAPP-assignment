@@ -60,13 +60,13 @@ namespace WAPP_assignment
         protected global::System.Web.UI.WebControls.LinkButton btnDraftQuizzes;
 
         /// <summary>
-        /// btnRejectedQuizzes control.
+        /// btnArchivedQuizzes control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.LinkButton btnRejectedQuizzes;
+        protected global::System.Web.UI.WebControls.LinkButton btnArchivedQuizzes;
 
         /// <summary>
         /// btnCreateQuiz control.

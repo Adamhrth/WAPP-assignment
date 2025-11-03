@@ -14,7 +14,7 @@
             <div class="container">
                 <!-- Logo Section -->
                 <div class="logo-section">
-                    <img src="images/klogo.png" alt="KinderLearn Logo" class="logo-image" />
+                    <img src="../images/klogo.png" alt="KinderLearn Logo" class="logo-image" />
                     <h1 class="logo-text">KinderLearn</h1>
                 </div>
                 

@@ -3,13 +3,13 @@ using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Web.UI;
-using System.Web.UI.HtmlControls; // Needed for HtmlGenericControl
+using System.Web.UI.HtmlControls; // This is needed for divNoQuizzes
+using System.Web.UI.WebControls; // This is needed for the repeaters
 
 namespace WAPP_assignment
 {
     public partial class teacherdashboard : System.Web.UI.Page
     {
-        // Get connection string from Web.config
         private string GetConnectionString()
         {
             return ConfigurationManager.ConnectionStrings["EducationDB"].ConnectionString;
@@ -17,7 +17,6 @@ namespace WAPP_assignment
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            // --- SECURITY CHECK ---
             if (Session["IsAuthenticated"] == null || !(bool)Session["IsAuthenticated"])
             {
                 Response.Redirect("../loginsignup/login.aspx");
@@ -28,7 +27,6 @@ namespace WAPP_assignment
                 Response.Redirect("../loginsignup/login.aspx");
                 return;
             }
-            // --- END SECURITY CHECK ---
 
             if (!IsPostBack)
             {
@@ -85,7 +83,7 @@ namespace WAPP_assignment
                     (SELECT COUNT(DISTINCT QA.StudentID) FROM QuizAttempts QA WHERE QA.QuizID = Q.QuizID AND QA.CompletedAt IS NOT NULL) AS StudentCount,
                     (SELECT COUNT(*) FROM Questions QN WHERE QN.QuizID = Q.QuizID) AS QuestionCount
                 FROM Quizzes Q
-                WHERE Q.TeacherID = @TeacherID
+                WHERE Q.TeacherID = @TeacherID AND Q.Status != 'Archived'
                 ORDER BY Q.CreatedAt DESC";
 
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
@@ -99,8 +97,6 @@ namespace WAPP_assignment
                 }
             }
 
-            // --- ADDED THIS CHECK ---
-            // If the repeater has 0 items after binding, show the 'divNoQuizzes'
             if (rptQuizzes.Items.Count == 0)
             {
                 divNoQuizzes.Visible = true;
@@ -135,14 +131,38 @@ namespace WAPP_assignment
                 }
             }
 
-            // --- ADDED THIS CHECK ---
-            // If the repeater has 0 items, show the literal and set its text
             if (rptStudentActivity.Items.Count == 0)
             {
                 litNoActivity.Visible = true;
-                litNoActivity.Text = @"<tr><td colspan='5' style='text-align:center; padding: 20px;'>
+                litNoActivity.Text = @"<tr><td colspan='4' style='text-align:center; padding: 20px;'>
                                         No students have completed your quizzes yet.
                                       </td></tr>";
+            }
+        }
+
+        protected void rptQuizzes_ItemCommand(object sender, RepeaterCommandEventArgs e)
+        {
+            if (e.CommandName == "ResubmitQuiz")
+            {
+                int quizId = Convert.ToInt32(e.CommandArgument);
+                int teacherId = Convert.ToInt32(Session["UserID"]);
+
+                string query = "UPDATE Quizzes SET Status = 'Pending' WHERE QuizID = @QuizID AND TeacherID = @TeacherID";
+
+                using (SqlConnection conn = new SqlConnection(GetConnectionString()))
+                {
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@QuizID", quizId);
+                        cmd.Parameters.AddWithValue("@TeacherID", teacherId);
+                        conn.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                LoadStats(teacherId);
+                LoadQuizzes(teacherId);
+                LoadRecentActivity(teacherId);
             }
         }
 
@@ -157,6 +177,8 @@ namespace WAPP_assignment
                     return "draft";
                 case "rejected":
                     return "rejected";
+                case "archived":
+                    return "archived";
                 default:
                     return "draft";
             }

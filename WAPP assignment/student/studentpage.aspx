@@ -15,7 +15,7 @@
             <header class="header">
                 <div class="logo">
                     <div class="logo-icon">
-                        <img src="images/klogo.png" alt="KinderLearn Logo" />
+                        <img src="../images/klogo.png" alt="KinderLearn Logo" />
                     </div>
                     KinderLearn
                 </div>
