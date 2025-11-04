@@ -92,6 +92,24 @@
                         <span>View Pending Quizzes &rarr;</span>
                     </div>
                 </asp:HyperLink>
+                
+                <asp:HyperLink ID="hlUserApproval" runat="server" CssClass="hub-card" NavigateUrl="AdminUserManagement.aspx" style="border-color: var(--color-warning);">
+                    <div class="hub-card-header">
+                        <div class="hub-card-icon pending"> 
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/>
+                                <line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
+                            </svg>
+                        </div>
+                        <span>Pending Users</span>
+                    </div>
+                    <div class="hub-card-body" style="color: var(--color-warning);">
+                        <asp:Literal ID="litPendingUsers" runat="server">0</asp:Literal>
+                    </div>
+                    <div class="hub-card-footer">
+                        <span>Manage Pending Users &rarr;</span>
+                    </div>
+                </asp:HyperLink>
 
                 <asp:HyperLink ID="hlUserManagement" runat="server" CssClass="hub-card" NavigateUrl="AdminUserManagement.aspx">
                     <div class="hub-card-header">
@@ -100,7 +118,7 @@
                                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
                             </svg>
                         </div>
-                        <span>User Management</span>
+                        <span>Total Users</span>
                     </div>
                     <div class="hub-card-body">
                         <asp:Literal ID="litTotalUsers" runat="server">0</asp:Literal>
@@ -109,23 +127,6 @@
                         <span>Manage All Users &rarr;</span>
                     </div>
                 </asp:HyperLink>
-
-                <div class="hub-card" style="border-color: var(--color-success);">
-                    <div class="hub-card-header">
-                        <div class="hub-card-icon new-users">
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/>
-                            </svg>
-                        </div>
-                        <span>New Users This Week</span>
-                    </div>
-                    <div class="hub-card-body" style="color: var(--color-success);">
-                        <asp:Literal ID="litNewUsers" runat="server">0</asp:Literal>
-                    </div>
-                    <div class="hub-card-footer">
-                        <span>Joined in the last 7 days</span>
-                    </div>
-                </div>
             </div>
         </main>
     </div>

@@ -35,13 +35,13 @@ namespace WAPP_assignment.admin
 
         private void LoadStats()
         {
-            // Updated query to also get new users (joined in last 7 days)
+            // Updated query to get PendingUsers (IsActive = 0)
             string query = @"
-                SELECT 
-                    (SELECT COUNT(*) FROM Users) AS TotalUsers,
-                    (SELECT COUNT(*) FROM Quizzes WHERE Status = 'Pending') AS PendingQuizzes,
-                    (SELECT COUNT(*) FROM Users WHERE CreatedAt >= DATEADD(day, -7, GETDATE())) AS NewUsers
-            ";
+         SELECT 
+            (SELECT COUNT(*) FROM Users) AS TotalUsers,
+            (SELECT COUNT(*) FROM Quizzes WHERE Status = 'Pending') AS PendingQuizzes,
+            (SELECT COUNT(*) FROM Users WHERE IsActive = 0) AS PendingUsers
+    ";
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))
@@ -53,7 +53,7 @@ namespace WAPP_assignment.admin
                         {
                             litTotalUsers.Text = reader["TotalUsers"].ToString();
                             litPendingQuizzes.Text = reader["PendingQuizzes"].ToString();
-                            litNewUsers.Text = reader["NewUsers"].ToString();
+                            litPendingUsers.Text = reader["PendingUsers"].ToString();
                         }
                     }
                 }

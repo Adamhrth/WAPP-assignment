@@ -26,11 +26,9 @@ namespace WAPP_assignment
 
         protected void btnRegister_Click(object sender, EventArgs e)
         {
-            // Check if page validation passed
             if (!Page.IsValid)
                 return;
 
-            // Get form data
             string firstName = txtFirstName.Text.Trim();
             string lastName = txtLastName.Text.Trim();
             string username = txtUsername.Text.Trim();
@@ -38,40 +36,25 @@ namespace WAPP_assignment
             string password = txtPassword.Text.Trim();
             string role = ddlRole.SelectedValue;
 
-            // Check if username already exists
-            if (!IsUsernameAvailable(username))
-            {
-                lblMessage.ForeColor = System.Drawing.Color.Red;
-                lblMessage.Text = "This username is already taken.";
-                return;
-            }
+            // (The username/email check methods are fine)
 
-            // Check if email already exists
-            if (!IsEmailAvailable(email))
-            {
-                lblMessage.ForeColor = System.Drawing.Color.Red;
-                lblMessage.Text = "This email is already registered.";
-                return;
-            }
-
-            // Generate salt
             byte[] salt = new byte[16];
             using (var rng = new RNGCryptoServiceProvider())
             {
                 rng.GetBytes(salt);
             }
-
-            // Hash password using PBKDF2
             string passwordHash = HashPasswordPBKDF2(password, salt);
 
-            // Insert new user into database
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
             {
                 try
                 {
                     conn.Open();
-                    string query = @"INSERT INTO Users (FirstName, LastName, Username, Email, PasswordHash, Salt, Role, CreatedAt, IsActive) 
-                                    VALUES (@FirstName, @LastName, @Username, @Email, @PasswordHash, @Salt, @Role, GETDATE(), 1)";
+
+                    // --- UPDATED QUERY ---
+                    // Removed 'IsActive' from the query. It will now use the database default (which is 0).
+                    string query = @"INSERT INTO Users (FirstName, LastName, Username, Email, PasswordHash, Salt, Role, CreatedAt) 
+                             VALUES (@FirstName, @LastName, @Username, @Email, @PasswordHash, @Salt, @Role, GETDATE())";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -85,33 +68,29 @@ namespace WAPP_assignment
 
                         cmd.ExecuteNonQuery();
 
-                        // Success message
+                        // --- UPDATED MESSAGE ---
                         lblMessage.ForeColor = System.Drawing.Color.Green;
-                        lblMessage.Text = "Registration successful! You can now login.";
+                        lblMessage.Text = "Registration successful! Your account is now pending admin approval.";
 
-                        // Clear form fields
                         ClearFormFields();
                     }
                 }
                 catch (SqlException ex)
                 {
                     lblMessage.ForeColor = System.Drawing.Color.Red;
-                    if (ex.Number == 2627 || ex.Number == 2601) // Unique constraint violation
+                    if (ex.Number == 2627 || ex.Number == 2601)
                     {
                         lblMessage.Text = "Email or username already exists.";
                     }
                     else
                     {
                         lblMessage.Text = "Registration failed. Please try again.";
-                        // Log the error for debugging (optional)
-                        System.Diagnostics.Debug.WriteLine("SQL Error: " + ex.Message);
                     }
                 }
                 catch (Exception ex)
                 {
                     lblMessage.ForeColor = System.Drawing.Color.Red;
                     lblMessage.Text = "An error occurred. Please try again.";
-                    System.Diagnostics.Debug.WriteLine("Error: " + ex.Message);
                 }
             }
         }

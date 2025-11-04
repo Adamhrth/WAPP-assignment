@@ -60,6 +60,24 @@ namespace WAPP_assignment.admin
         protected global::System.Web.UI.WebControls.Literal litPendingQuizzes;
 
         /// <summary>
+        /// hlUserApproval control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.HyperLink hlUserApproval;
+
+        /// <summary>
+        /// litPendingUsers control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litPendingUsers;
+
+        /// <summary>
         /// hlUserManagement control.
         /// </summary>
         /// <remarks>
@@ -76,14 +94,5 @@ namespace WAPP_assignment.admin
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litTotalUsers;
-
-        /// <summary>
-        /// litNewUsers control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litNewUsers;
     }
 }

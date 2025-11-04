@@ -30,7 +30,9 @@ namespace WAPP_assignment.admin
 
         private void LoadUsers()
         {
-            string query = "SELECT UserID, FirstName, LastName, Email, Role, IsActive, CreatedAt FROM Users ORDER BY Role, LastName";
+            // UPDATED: Now sorts by 'IsActive' (inactive first), then by when they joined.
+            string query = "SELECT UserID, FirstName, LastName, Email, Role, IsActive, CreatedAt FROM Users ORDER BY IsActive, CreatedAt DESC";
+
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
             {
                 using (SqlCommand cmd = new SqlCommand(query, conn))

@@ -44,20 +44,30 @@ namespace WAPP_assignment
             string username = txtUsername.Text.Trim();
             string password = txtPassword.Text.Trim();
 
-            // Try to authenticate user
-            if (AuthenticateUser(username, password))
+            // Get the authentication status (it returns a string now)
+            string authStatus = AuthenticateUser(username, password);
+
+            if (authStatus == "SUCCESS")
             {
-                // Authentication successful - user is redirected in AuthenticateUser method
+                // Authentication was successful. The AuthenticateUser method
+                // already handled the session and redirect.
             }
-            else
+            else if (authStatus == "INACTIVE")
             {
-                // Authentication failed
+                // specific error message
+                lblMessage.ForeColor = System.Drawing.Color.Red;
+                lblMessage.Text = "Your account is pending approval or has been deactivated. Please contact an admin.";
+            }
+            else // (authStatus == "INVALID")
+            {
+      
                 lblMessage.ForeColor = System.Drawing.Color.Red;
                 lblMessage.Text = "Invalid username or password.";
             }
         }
 
-        private bool AuthenticateUser(string username, string password)
+        // --- THIS METHOD IS UPDATED to return a string ---
+        private string AuthenticateUser(string username, string password)
         {
             using (SqlConnection conn = new SqlConnection(GetConnectionString()))
             {
@@ -65,10 +75,9 @@ namespace WAPP_assignment
                 {
                     conn.Open();
 
-                    // Query to get user by username (not email)
                     string query = @"SELECT UserID, FirstName, LastName, Username, PasswordHash, Salt, Role, IsActive 
-                                     FROM Users 
-                                     WHERE Username = @Username";
+                             FROM Users 
+                             WHERE Username = @Username";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -78,33 +87,30 @@ namespace WAPP_assignment
                         {
                             if (reader.Read())
                             {
-                                // Check if account is active
+                                // User was found. First, check if they are active.
                                 bool isActive = Convert.ToBoolean(reader["IsActive"]);
                                 if (!isActive)
                                 {
-                                    lblMessage.Text = "Your account has been deactivated. Please contact admin.";
-                                    return false;
+                                    // --- UPDATED ---
+                                    // Return the "INACTIVE" status code
+                                    return "INACTIVE";
                                 }
 
-                                // Get stored password hash and salt
+                                // User is active, so now check their password
                                 string storedHash = reader["PasswordHash"].ToString();
                                 string saltString = reader["Salt"].ToString();
                                 byte[] salt = Convert.FromBase64String(saltString);
-
-                                // Hash the entered password with the stored salt
                                 string enteredHash = HashPasswordPBKDF2(password, salt);
 
-                                // Compare hashes
                                 if (enteredHash == storedHash)
                                 {
-                                    // Password is correct - create session
+                                    // Password is correct! Create session.
                                     int userId = Convert.ToInt32(reader["UserID"]);
                                     string firstName = reader["FirstName"].ToString();
                                     string lastName = reader["LastName"].ToString();
                                     string userUsername = reader["Username"].ToString();
                                     string role = reader["Role"].ToString();
 
-                                    // Store user info in session
                                     Session["UserID"] = userId;
                                     Session["Username"] = userUsername;
                                     Session["FirstName"] = firstName;
@@ -115,29 +121,31 @@ namespace WAPP_assignment
 
                                     // Redirect based on role
                                     RedirectUserByRole(role);
-                                    return true;
+
+                                    // --- UPDATED ---
+                                    return "SUCCESS";
                                 }
                                 else
                                 {
-                                    // Incorrect password
-                                    return false;
+                                    // --- UPDATED ---
+                                    // Wrong password
+                                    return "INVALID";
                                 }
                             }
                             else
                             {
+                                // --- UPDATED ---
                                 // User not found
-                                return false;
+                                return "INVALID";
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    // Log error for debugging
                     System.Diagnostics.Debug.WriteLine("Login Error: " + ex.Message);
-                    lblMessage.ForeColor = System.Drawing.Color.Red;
-                    lblMessage.Text = "An error occurred. Please try again.";
-                    return false;
+                    // --- UPDATED ---
+                    return "INVALID";
                 }
             }
         }
