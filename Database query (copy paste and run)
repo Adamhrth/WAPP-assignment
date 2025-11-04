@@ -1,0 +1,110 @@
+/* 1. USERS TABLE */
+CREATE TABLE [dbo].[Users] (
+    [UserID]       INT            IDENTITY (1, 1) NOT NULL,
+    [FirstName]    NVARCHAR (50)  NOT NULL,
+    [LastName]     NVARCHAR (50)  NOT NULL,
+    [Username]     NVARCHAR (50)  NOT NULL,
+    [Email]        NVARCHAR (100) NOT NULL,
+    [PasswordHash] NVARCHAR (255) NOT NULL,
+    [Salt]         NVARCHAR (255) NOT NULL,
+    [Role]         NVARCHAR (20)  NOT NULL,
+    [CreatedAt]    DATETIME       DEFAULT (getdate()) NULL,
+    [IsActive]     BIT            DEFAULT ((1)) NULL,
+    [Avatar]       NVARCHAR (50)  NULL,
+    PRIMARY KEY CLUSTERED ([UserID] ASC),
+    UNIQUE NONCLUSTERED ([Email] ASC),
+    UNIQUE NONCLUSTERED ([Username] ASC),
+    CHECK ([Role] = 'admin' OR [Role] = 'teacher' OR [Role] = 'student')
+);
+GO
+
+/* 2. CATEGORIES TABLE */
+CREATE TABLE [dbo].[Categories] (
+    [CategoryID]  INT            IDENTITY (1, 1) NOT NULL,
+    [Name]        NVARCHAR (100) NOT NULL,
+    [Description] NVARCHAR (255) NULL,
+    PRIMARY KEY CLUSTERED ([CategoryID] ASC),
+    UNIQUE NONCLUSTERED ([Name] ASC)
+);
+GO
+
+/* 3. ACHIEVEMENTS TABLE */
+CREATE TABLE [dbo].[Achievements] (
+    [AchievementID]      INT            IDENTITY (1, 1) NOT NULL,
+    [Name]               NVARCHAR (100) NOT NULL,
+    [Description]        NVARCHAR (255) NOT NULL,
+    [QuizCountThreshold] INT            NOT NULL DEFAULT 1,
+    [CategoryID]         INT            NULL,
+    [BadgeType]          NVARCHAR (10)  NOT NULL DEFAULT 'Teacher',
+    PRIMARY KEY CLUSTERED ([AchievementID] ASC),
+    FOREIGN KEY ([CategoryID]) REFERENCES [dbo].[Categories] ([CategoryID]),
+    CHECK ([BadgeType] = 'Teacher' OR [BadgeType] = 'Global')
+);
+GO
+
+/* 4. QUIZZES TABLE */
+CREATE TABLE [dbo].[Quizzes] (
+    [QuizID]              INT            IDENTITY (1, 1) NOT NULL,
+    [Title]               NVARCHAR (200) NOT NULL,
+    [Description]         NVARCHAR (500) NULL,
+    [CategoryID]          INT            NOT NULL,
+    [TeacherID]           INT            NOT NULL,
+    [Status]              NVARCHAR (20)  NOT NULL DEFAULT 'Pending',
+    [CreatedAt]           DATETIME       DEFAULT (getdate()) NULL,
+    [GrantsAchievementID] INT            NULL,
+    PRIMARY KEY CLUSTERED ([QuizID] ASC),
+    FOREIGN KEY ([CategoryID]) REFERENCES [dbo].[Categories] ([CategoryID]),
+    FOREIGN KEY ([TeacherID]) REFERENCES [dbo].[Users] ([UserID]),
+    FOREIGN KEY ([GrantsAchievementID]) REFERENCES [dbo].[Achievements] ([AchievementID]) ON DELETE SET NULL,
+    CONSTRAINT [CK_Quizzes_Status] CHECK ([Status] IN ('Pending', 'Approved', 'Rejected', 'Archived'))
+);
+GO
+
+/* 5. QUESTIONS TABLE */
+CREATE TABLE [dbo].[Questions] (
+    [QuestionID]   INT             IDENTITY (1, 1) NOT NULL,
+    [QuizID]       INT             NOT NULL,
+    [QuestionText] NVARCHAR (1000) NOT NULL,
+    [QuestionType] NVARCHAR (20)   NOT NULL DEFAULT 'MultipleChoice',
+    PRIMARY KEY CLUSTERED ([QuestionID] ASC),
+    FOREIGN KEY ([QuizID]) REFERENCES [dbo].[Quizzes] ([QuizID]) ON DELETE CASCADE
+);
+GO
+
+/* 6. OPTIONS TABLE */
+CREATE TABLE [dbo].[Options] (
+    [OptionID]   INT            IDENTITY (1, 1) NOT NULL,
+    [QuestionID] INT            NOT NULL,
+    [OptionText] NVARCHAR (500) NOT NULL,
+    [IsCorrect]  BIT            NOT NULL DEFAULT ((0)),
+    PRIMARY KEY CLUSTERED ([OptionID] ASC),
+    FOREIGN KEY ([QuestionID]) REFERENCES [dbo].[Questions] ([QuestionID]) ON DELETE CASCADE
+);
+GO
+
+/* 7. QUIZ ATTEMPTS TABLE */
+CREATE TABLE [dbo].[QuizAttempts] (
+    [AttemptID]   INT             IDENTITY (1, 1) NOT NULL,
+    [StudentID]   INT             NOT NULL,
+    [QuizID]      INT             NOT NULL,
+    [Score]       DECIMAL (5, 2)  NULL,
+    [StartedAt]   DATETIME        NOT NULL DEFAULT (getdate()),
+    [CompletedAt] DATETIME        NULL,
+    PRIMARY KEY CLUSTERED ([AttemptID] ASC),
+    FOREIGN KEY ([StudentID]) REFERENCES [dbo].[Users] ([UserID]),
+    FOREIGN KEY ([QuizID]) REFERENCES [dbo].[Quizzes] ([QuizID]) ON DELETE CASCADE
+);
+GO
+
+/* 8. STUDENT ACHIEVEMENTS TABLE */
+CREATE TABLE [dbo].[StudentAchievements] (
+    [StudentAchievementID] INT      IDENTITY (1, 1) NOT NULL,
+    [StudentID]            INT      NOT NULL,
+    [AchievementID]        INT      NOT NULL,
+    [EarnedAt]             DATETIME NOT NULL DEFAULT (getdate()),
+    PRIMARY KEY CLUSTERED ([StudentAchievementID] ASC),
+    FOREIGN KEY ([StudentID]) REFERENCES [dbo].[Users] ([UserID]),
+    FOREIGN KEY ([AchievementID]) REFERENCES [dbo].[Achievements] ([AchievementID]) ON DELETE CASCADE,
+    UNIQUE NONCLUSTERED ([StudentID] ASC, [AchievementID] ASC)
+);
+GO
